@@ -19,7 +19,7 @@ Gunakan target Makefile:
 | `make migrate` | Menjalankan migrasi |
 | `make test` | Menjalankan tes (Pest) |
 | `make build` | Build aset CSS/JS |
-| `make update` | composer install + build aset + migrasi |
+| `make update` | composer install + npm ci + build aset + migrasi |
 | `make logs` | Melihat log aplikasi dan nginx |
 | `make shell` | Masuk ke container aplikasi |
 

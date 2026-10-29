@@ -1,6 +1,9 @@
 # Perintah harian proyek ini. Ketik "make help" untuk melihat daftarnya.
 # Setiap baris "nama: ## keterangan" otomatis tampil di make help.
 
+# Paket npm dipasang dengan "npm ci": persis mengikuti package-lock.json dan tidak
+# pernah mengubahnya, jadi tidak muncul perubahan aneh saat git pull.
+
 COMPOSE = docker compose
 APP     = $(COMPOSE) exec app
 NODE    = $(COMPOSE) run --rm node
@@ -18,6 +21,7 @@ setup: ## Pertama kali: copy .env, build container, composer/npm install, key:ge
 # Kunci aplikasi hanya dibuat sekali. Kalau dibuat ulang, semua orang otomatis keluar.
 	@grep -q '^APP_KEY=base64:' .env || $(APP) php artisan key:generate
 	$(APP) php artisan migrate --seed
+	$(NODE) npm ci
 	$(MAKE) build
 	@echo ""
 	@echo "Selesai. Buka http://localhost:8000"
@@ -25,8 +29,9 @@ setup: ## Pertama kali: copy .env, build container, composer/npm install, key:ge
 up: ## Nyalakan semua container
 	$(COMPOSE) up -d
 
-update: ## Setelah git pull: composer install, build aset, migrasi
+update: ## Setelah git pull: composer install, npm ci, build aset, migrasi
 	$(APP) composer install
+	$(NODE) npm ci
 	$(MAKE) build
 	$(APP) php artisan migrate
 
@@ -49,14 +54,15 @@ shell: ## Masuk ke dalam container app
 test: ## Jalankan tes Pest
 	$(APP) php artisan test
 
-build: ## Build aset CSS/JS lewat container node
-	$(NODE) sh -c "npm install && npm run build"
+build: ## Build aset CSS/JS lewat container node (paket npm dipasang oleh setup/update)
+	$(NODE) npm run build
 
 deploy: ## Di server: git pull, build, migrate --force, optimize, restart
 	git pull
 	$(COMPOSE) build
 	$(COMPOSE) up -d
 	$(APP) composer install --no-dev --optimize-autoloader
+	$(NODE) npm ci
 	$(MAKE) build
 	$(APP) php artisan migrate --force
 	$(APP) php artisan optimize

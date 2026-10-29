@@ -41,8 +41,11 @@ services:
 
   # Node hanya dipakai untuk membangun aset CSS/JS (make build).
   # Tidak ikut menyala saat make up.
+  # Berjalan sebagai user "node" (id 1000), bukan root, supaya file hasilnya
+  # (node_modules, public/build) tetap bisa kamu ubah dan hapus, terutama di Windows/WSL.
   node:
     image: node:22-alpine
+    user: node
     profiles: ["tools"]
     working_dir: /var/www
     volumes:
