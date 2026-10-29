@@ -1,0 +1,36 @@
+# File sistem operasi dan editor
+.DS_Store
+Thumbs.db
+/.idea
+/.vscode
+/.zed
+/.nova
+/.cursor/
+/.codex
+*.swp
+.phpactor.json
+_ide_helper.php
+
+# Rahasia dan data lokal (jangan pernah di-commit)
+.env
+.env.backup
+.env.production
+/auth.json
+/backups/*
+!/backups/.gitkeep
+*.sql
+*.sql.gz
+/database/*.sqlite
+
+# Dependency dan hasil build (diisi ulang oleh make setup)
+/vendor
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/public/fonts-manifest.dev.json
+/storage/*.key
+/storage/pail
+/.phpunit.cache
+.phpunit.result.cache
+*.log
