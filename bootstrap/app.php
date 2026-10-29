@@ -12,7 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Di server, pengunjung datang lewat Cloudflare Tunnel. Percayai header X-Forwarded-*
+        // darinya supaya Laravel tahu halaman dibuka lewat https. Aman, karena pintu 8000
+        // hanya terbuka untuk komputer itu sendiri (lihat docker-compose.yml).
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

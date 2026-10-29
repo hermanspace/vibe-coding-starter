@@ -17,6 +17,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Di server (APP_ENV=production) tidak ada akun uji: kata sandinya diketahui semua orang.
+        if (app()->isProduction()) {
+            return;
+        }
+
         // Akun uji untuk lokal. Masuk dengan test@example.com / password
         User::firstOrCreate(
             ['email' => 'test@example.com'],

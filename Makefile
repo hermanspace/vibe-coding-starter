@@ -20,7 +20,7 @@ setup: ## Pertama kali: copy .env, build container, composer/npm install, key:ge
 	$(APP) composer install
 # Kunci aplikasi hanya dibuat sekali. Kalau dibuat ulang, semua orang otomatis keluar.
 	@grep -q '^APP_KEY=base64:' .env || $(APP) php artisan key:generate
-	$(APP) php artisan migrate --seed
+	$(APP) php artisan migrate --seed --force
 	$(NODE) npm ci
 	$(MAKE) build
 	@echo ""
