@@ -1,10 +1,13 @@
 # Semua "kotak" yang dibutuhkan aplikasi. Nyalakan dengan: make up
 # Nama database dan passwordnya dibaca dari file .env (DB_DATABASE, DB_USERNAME, DB_PASSWORD).
+# "restart: unless-stopped": kotak menyala lagi sendiri setelah laptop atau server dinyalakan
+# ulang, kecuali sebelumnya dimatikan dengan make down.
 services:
 
   # Aplikasi Laravel (PHP-FPM). Kode di folder ini dipasang ke /var/www di dalam kotak.
   app:
     build: ./docker/app
+    restart: unless-stopped
     volumes:
       - ./:/var/www
     depends_on:
@@ -16,6 +19,7 @@ services:
   # datang lewat Cloudflare Tunnel, jadi pintu ini tidak boleh terbuka ke internet.
   nginx:
     image: nginx:1.27-alpine
+    restart: unless-stopped
     ports:
       - "127.0.0.1:8000:80"
     volumes:
@@ -28,6 +32,7 @@ services:
   # Port sengaja tidak dibuka ke luar supaya tidak bentrok dengan MySQL lain di laptopmu.
   mysql:
     image: mysql:8.0
+    restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USERNAME}
